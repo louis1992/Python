@@ -1,25 +1,16 @@
-# Python 3.5
-# Spacemacs
+from bs4 import BeautifulSoup
+from pprint import pprint
+import requests
 
-import pandas as pd
+html = requests.get("http://comic.naver.com/webtoon/weekday.nhn")
+soup = BeautifulSoup(html.text, 'html.parser')
+html.close()
 
-# Loading data.
-def load_data():
-    train_df = pd.read_csv("./train_data.csv")
-    cols = ["Age"]
-    data = train_df[cols].values
-    return data
+data1_list=soup.findAll('div',{'class':'col_inner'})
 
-def get_average(data):
-    sum = 0.0
-    for data_ in data:
-        sum = sum + data_
-    return sum/len(data)
+for data1 in data1_list:
+    data2=data1.findAll('a',{'class':'title'})
+    # pprint(data2)
 
-def main():
-    data = load_data()
-    print (get_average(data))
-
-if __name__ == '__main__':
-    main()
-
+    title_list = [t.text for t in data2]
+    pprint(title_list)
